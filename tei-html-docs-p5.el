@@ -3,7 +3,7 @@
 ;; Copyright (C) 2005 P J Heslin
 ;;
 ;; Author: Peter Heslin <p.j.heslin@dur.ac.uk>
-;; URL: http://www.dur.ac.uk/p.j.heslin/Software/Emacs/Download/tei-html-docs-p5.el
+;; URL: http://www.dur.ac.uk/p.j.heslin/Software/Emacs
 ;; Version: 1.0
 ;;
 ;; This program is free software; you can redistribute it and/or modify
