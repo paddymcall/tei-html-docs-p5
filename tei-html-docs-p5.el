@@ -71,13 +71,15 @@
 
 (require 'xmltok)
 
-(defcustom tei-html-docs-p5-dir "/usr/share/doc/tei-p5-doc/en/html"
+(defcustom tei-html-docs-p5-dir nil
   "Directory containing the TEI P5 documentation in HTML format.
 
   You can complete the directory name with `C-M-i'.
 
   (Since the move of TEI to https://github.com/TEIC/, it's
-  unclear to me where to actually get these.)
+  unclear to me where to actually get these. The debian
+  package (see http://wiki.tei-c.org/index.php/TEIDebian)
+  puts things in /usr/share/doc/tei-p5-doc/en/html.)
 
   If NIL, use the on-line version."
   :type '(choice directory (const :tag "Use online version" nil))
