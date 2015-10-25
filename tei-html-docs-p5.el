@@ -69,6 +69,8 @@
 
 ;;; Code:
 
+(require 'xmltok)
+
 (defcustom tei-html-docs-p5-dir "/usr/share/doc/tei-p5-doc/en/html"
   "Directory containing the TEI P5 documentation in HTML format.
 
