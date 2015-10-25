@@ -63,25 +63,33 @@
 (defvar tei-html-docs-p5-view-command 'browse-url
   "Command to use to view the TEI documentation")
 (setq tei-html-docs-p5-view-command
-      (if (fboundp 'w3m-goto-url) 'w3m-goto-url 'browse-url))
+      (cond
+       ((fboundp 'eww-browse-url) 'eww-browse-url)
+       ((fboundp 'w3m-goto-url) 'w3m-goto-url)
+       (t 'browse-url)))
+
+(defun tei-html-docs-p5-get-element-name ()
+  "Gets the name of the element close to point."
+  (save-match-data
+    (save-excursion
+      (if (and (re-search-backward "<[^!?/>]" nil t)
+	       (re-search-forward "\\=<\\([^!?/>][^ \t\r\n>]*\\)" nil t))
+	  (match-string 1)))))
 
 (defun tei-html-docs-p5-element-at-point ()
   (interactive)
   (save-excursion
-    (if (and (re-search-backward "<[^!?/>]" nil t)
-             (re-search-forward "\\=<\\([^!?/>][^ \t\r\n>]*\\)" nil t))
-        (let ((file (cadr (assoc (match-string 1)
-                                 tei-html-docs-p5-element-alist))))
-          (if file
-              (funcall tei-html-docs-p5-view-command
-                       (if tei-html-docs-p5-dir
-                           (concat "file://"
-                                   (expand-file-name
-                                    (concat tei-html-docs-p5-dir file)))
-                         (concat tei-html-docs-p5-url file)))
-            (message "%s" (concat "Error: element "
-                                  (match-string 1) " not found in docs"))))
-      (message "%s" "Error: no element found."))))
+    (let ((file (cadr (assoc (tei-html-docs-p5-get-element-name)
+			     tei-html-docs-p5-element-alist))))
+      (if file
+	  (funcall tei-html-docs-p5-view-command
+		   (if tei-html-docs-p5-dir
+		       (concat "file://"
+			       (expand-file-name
+				(concat tei-html-docs-p5-dir file)))
+		     (concat tei-html-docs-p5-url file)))
+	(message "%s" (concat "Error: element "
+			      (match-string 1) " not found in docs"))))))
   
 
 ;; Almost all, but unfortunately not quite all of the files are of the
