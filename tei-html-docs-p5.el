@@ -1,16 +1,16 @@
 ;; tei-html-docs-p5.el -- Show TEI guidelines for current element
 ;;
+;; Copyright (C) 2015-2017 Patrick McAllister
+;;
+;; Author: Patrick McAllister <pma@rdorte.org>
+;; URL: https://github.com/paddymcall/tei-html-docs-p5
+;; Version: 1.1
+;;
 ;; Copyright (C) 2005 P J Heslin
 ;;
 ;; Author: Peter Heslin <p.j.heslin@dur.ac.uk>
 ;; URL: http://www.dur.ac.uk/p.j.heslin/Software/Emacs
 ;; Version: 1.0
-;;
-;; Copyright (C) 2015 Patrick McAllister
-;;
-;; Author: Patrick McAllister <pma@rdorte.org>
-;; URL: https://github.com/paddymcall/tei-html-docs-p5
-;; Version: 1.1
 ;;
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
