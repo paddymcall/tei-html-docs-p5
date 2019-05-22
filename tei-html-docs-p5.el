@@ -1,10 +1,12 @@
 ;; tei-html-docs-p5.el -- Show TEI guidelines for current element
 ;;
-;; Copyright (C) 2015-2017 Patrick McAllister
+;; Copyright (C) 2015-2019 Patrick McAllister
 ;;
 ;; Author: Patrick McAllister <pma@rdorte.org>
 ;; URL: https://github.com/paddymcall/tei-html-docs-p5
 ;; Version: 1.1
+;;
+;;
 ;;
 ;; Copyright (C) 2005 P J Heslin
 ;;
@@ -46,12 +48,10 @@
 ;; http://tei.sf.net (or, nowadays, github) -- the filename will look something like
 ;; tei-p5-doc-0.1.9.zip
 ;;
-;; Now set the variable tei-html-docs-p5-dir to the directory with all of
-;; the ref-*.html files you just unzipped, like so:
+;; Now set the variable tei-html-docs-p5-dir to the directory with all
+;; of the ref-*.html files you just unzipped:
 ;;
-;;    (setq tei-html-docs-p5-dir "~/TEI_P5/")
-;;
-;; or M-x customize-variable RET tei-html-docs-p5-dir
+;; M-x customize-variable RET tei-html-docs-p5-dir
 ;;
 ;; If you don't set tei-html-docs-p5-dir, then the on-line version of the
 ;; docs on the TEI web-site will be used instead.
@@ -74,24 +74,17 @@
 (defcustom tei-html-docs-p5-dir nil
   "Directory containing the TEI P5 documentation in HTML format.
 
-  You can complete the directory name with `C-M-i'.
-
-  (Since the move of TEI to https://github.com/TEIC/, it's
-  unclear to me where to actually get these. The debian
-  package (see http://wiki.tei-c.org/index.php/TEIDebian)
-  puts things in /usr/share/doc/tei-p5-doc/en/html.)
-
-  If NIL, use the on-line version."
+  If nil, use the on-line version."
   :type '(choice directory (const :tag "Use online version" nil))
   :group 'tei-html-docs-p5)
 
-(defcustom tei-html-docs-p5-url "http://www.tei-c.org/P5/Guidelines/"
+(defcustom tei-html-docs-p5-url "https://www.tei-c.org/release/doc/tei-p5-doc/en/html/"
   "Base URL for viewing the TEI P5 Documentation."
   :type 'string
   :group 'tei-html-docs-p5)
 
 (defcustom tei-html-docs-p5-view-command 'eww-browse-url
-  "Command to use to view the TEI documentation"
+  "Command to use to view the TEI documentation."
   ;; :type '(function :tag "Select how to browse the TEI docs.")
   :type '(choice (function-item :tag "eww" eww)
 		 (function-item :tag "w3m" w3m-browse-url)
@@ -109,7 +102,7 @@
 ;; UPDATE: you should be able to get this list from `tei-html-docs-p5-make-elements-list'.
 
 (defvar tei-html-docs-p5-element-alist nil
-  "Maps TEI element names to the corresponding doc file. 
+  "Maps TEI element names to the corresponding doc file.
 
 To generate an up-to-date version for your documentation, set
 this to the result of `tei-html-docs-p5-make-elements-list'.")
@@ -904,15 +897,18 @@ this to the result of `tei-html-docs-p5-make-elements-list'.")
   (let ((el (tei-html-docs-p5-get-element-name)))
     (if el
 	(tei-html-docs-p5-element el)
-      (error "Couldn't find an element to look up here, sorry."))))
+      (error "Couldn't find an element to look up here, sorry"))))
 
 (defun tei-html-docs-p5-element (element)
   "Lookup ELEMENT in the TEI documentation.
 
-If ELEMENT is not specified, prompt with completion.
-"
+If ELEMENT is not specified, prompt with completion."
   (interactive
-   (list (completing-read "Lookup info for element: " (mapcar 'car tei-html-docs-p5-element-alist) nil nil (tei-html-docs-p5-get-element-name))))
+   (list (completing-read
+          "Lookup info for element: "
+          (mapcar 'car
+                  tei-html-docs-p5-element-alist)
+          nil nil (tei-html-docs-p5-get-element-name))))
   (let ((file (cadr (assoc (or element (tei-html-docs-p5-get-element-name))
 			   tei-html-docs-p5-element-alist))))
     (if file
@@ -926,22 +922,25 @@ If ELEMENT is not specified, prompt with completion.
 			    (match-string 1) " not found in docs")))))
   
 (defun tei-html-docs-p5-make-elements-list ()
-  "Generates the index of element-name to the filename of its documentation."
+  "Generate the index of element-name to the filename of its documentation."
   (when tei-html-docs-p5-dir
     (let ((files (directory-files tei-html-docs-p5-dir t "^ref-"))
-	  xmltok-attributes
 	  index
 	  failed)
       (dolist (file files (nreverse index))
 	(with-temp-buffer
 	  (insert-file-contents file)
 	  (goto-char (point-min))
-	  (if (and (search-forward "class=\"oddSpec\"" nil t) 
+	  (if (and (search-forward "class=\"oddSpec\"" nil t)
 		   (search-backward "<h3")
 		   (xmltok-forward)
 		   (= (length xmltok-attributes) 2)
 		   (string= (xmltok-attribute-local-name (elt xmltok-attributes 1)) "id"))
-	      (push (list (xmltok-attribute-value (elt xmltok-attributes 1)) (file-name-nondirectory file)) index)
+	      (push
+               (list
+                (xmltok-attribute-value (elt xmltok-attributes 1))
+                (file-name-nondirectory file))
+               index)
 	    (message (format "Failed to find useful stuff for: %s" file))))))))
 
 ;;;; time needed for the 2.8.0 guidelines:
@@ -957,4 +956,6 @@ If ELEMENT is not specified, prompt with completion.
 ;; (length soup)
 
 (provide 'tei-html-docs-p5)
+
+;;; tei-html-docs-p5 ends here
 
