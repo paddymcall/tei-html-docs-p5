@@ -90,13 +90,15 @@
   :type 'string
   :group 'tei-html-docs-p5)
 
-(defcustom tei-html-docs-p5-view-command 'eww-browse-url
+(defcustom tei-html-docs-p5-view-command 'browse-url
   "Command to use to view the TEI documentation"
-  ;; :type '(function :tag "Select how to browse the TEI docs.")
-  :type '(choice (function-item :tag "eww" eww)
-		 (function-item :tag "w3m" w3m-browse-url)
-		 (function-item :tag "default browser" browse-url))
+  :type '(function)
+  :options  '(eww
+	      w3m-browse-url
+	      browse-url)
   :group 'tei-html-docs-p5)
+
+(setq tei-html-docs-p5-view-command 'browse-url)
 
 ;; Almost all, but unfortunately not quite all of the files are of the
 ;; form ref-element.html.  For some reason, some element names have
@@ -913,17 +915,14 @@ If ELEMENT is not specified, prompt with completion.
 "
   (interactive
    (list (completing-read "Lookup info for element: " (mapcar 'car tei-html-docs-p5-element-alist) nil nil (tei-html-docs-p5-get-element-name))))
-  (let ((file (cadr (assoc (or element (tei-html-docs-p5-get-element-name))
-			   tei-html-docs-p5-element-alist))))
+  (let* ((name (or element (tei-html-docs-p5-get-element-name)))
+	 (file (cadr (assoc name tei-html-docs-p5-element-alist))))
     (if file
 	(funcall tei-html-docs-p5-view-command
 		 (if tei-html-docs-p5-dir
-		     (concat "file://"
-			     (expand-file-name
-			      (concat tei-html-docs-p5-dir file)))
+		     (concat "file://" (concat tei-html-docs-p5-dir file))
 		   (concat tei-html-docs-p5-url file)))
-      (message "%s" (concat "Error: element "
-			    (match-string 1) " not found in docs")))))
+      (message "Element %s not found in docs" name))))
   
 (defun tei-html-docs-p5-make-elements-list ()
   "Generates the index of element-name to the filename of its documentation."
